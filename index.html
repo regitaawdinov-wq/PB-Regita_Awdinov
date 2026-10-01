@@ -1,0 +1,2688 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Database Manajemen Tugas & Poin Siswa</title>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f4f6fb;
+    color:#222;
+}
+
+/* ================= LOGIN ================= */
+
+#loginPage{
+    position:fixed;
+    inset:0;
+    background:linear-gradient(135deg,#4f46e5,#7c3aed);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:99999;
+}
+
+.login-box{
+    width:390px;
+    max-width:90%;
+    background:white;
+    padding:35px;
+    border-radius:20px;
+    box-shadow:0 20px 50px rgba(0,0,0,.25);
+}
+
+.login-box h1{
+    text-align:center;
+    color:#4f46e5;
+    margin-bottom:8px;
+}
+
+.login-box p{
+    text-align:center;
+    color:#777;
+    margin-bottom:25px;
+}
+
+.login-group{
+    margin-bottom:17px;
+}
+
+.login-group label{
+    display:block;
+    font-weight:bold;
+    margin-bottom:7px;
+}
+
+.login-group input{
+    width:100%;
+    padding:13px;
+    border:1px solid #ddd;
+    border-radius:9px;
+    outline:none;
+    font-size:14px;
+}
+
+.login-group input:focus{
+    border-color:#6366f1;
+}
+
+.login-buttons{
+    display:flex;
+    gap:10px;
+}
+
+.login-buttons button{
+    flex:1;
+    padding:13px;
+    border:none;
+    border-radius:9px;
+    font-size:15px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.btn-login{
+    background:#4f46e5;
+    color:white;
+}
+
+.btn-cancel{
+    background:#e5e7eb;
+    color:#333;
+}
+
+.btn-daftar{
+    width:100%;
+    margin-top:12px;
+    padding:12px;
+    border:none;
+    border-radius:9px;
+    background:#16a34a;
+    color:white;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.login-error{
+    color:#dc2626;
+    text-align:center;
+    margin-top:15px;
+    font-size:13px;
+}
+
+.login-success{
+    color:#16a34a;
+    text-align:center;
+    margin-top:15px;
+    font-size:13px;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:240px;
+    height:100vh;
+    background:linear-gradient(180deg,#4f46e5,#3730a3);
+    color:white;
+    padding:25px 15px;
+}
+
+.logo{
+    text-align:center;
+    font-size:22px;
+    font-weight:bold;
+    margin-bottom:35px;
+}
+
+.menu{
+    padding:14px 18px;
+    margin:7px 0;
+    border-radius:10px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.menu:hover,
+.menu.active{
+    background:rgba(255,255,255,.18);
+}
+
+/* ================= MAIN ================= */
+
+.main{
+    margin-left:240px;
+    padding:30px;
+}
+
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+.page-title{
+    font-size:28px;
+    font-weight:bold;
+    margin-bottom:25px;
+}
+
+/* ================= CARDS ================= */
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+    margin-bottom:25px;
+}
+
+.card{
+    background:white;
+    padding:22px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,.06);
+}
+
+.card h3{
+    font-size:14px;
+    color:#777;
+    margin-bottom:10px;
+}
+
+.card p{
+    font-size:30px;
+    font-weight:bold;
+    color:#4f46e5;
+}
+
+/* ================= BOX ================= */
+
+.box{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,.06);
+    margin-bottom:25px;
+}
+
+.box h2{
+    margin-bottom:20px;
+}
+
+/* ================= FORM ================= */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+}
+
+.form-group label{
+    margin-bottom:7px;
+    font-weight:bold;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    outline:none;
+}
+
+.form-group textarea{
+    min-height:90px;
+    resize:vertical;
+}
+
+.full{
+    grid-column:1/-1;
+}
+
+button{
+    border:none;
+    border-radius:8px;
+    padding:11px 17px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.btn-primary{
+    background:#4f46e5;
+    color:white;
+}
+
+.btn-secondary{
+    background:#e5e7eb;
+    color:#333;
+}
+
+.btn-danger{
+    background:#dc2626;
+    color:white;
+}
+
+.btn-warning{
+    background:#f59e0b;
+    color:white;
+}
+
+.btn-export{
+    background:#16a34a;
+    color:white;
+    margin-bottom:15px;
+}
+
+/* ================= SEARCH ================= */
+
+.search-filter{
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr;
+    gap:12px;
+    margin-bottom:20px;
+}
+
+.search-filter input,
+.search-filter select{
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:8px;
+}
+
+/* ================= TABLE ================= */
+
+.table-container{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,
+td{
+    padding:13px;
+    border-bottom:1px solid #eee;
+    text-align:left;
+    font-size:14px;
+}
+
+th{
+    background:#f8fafc;
+    color:#555;
+}
+
+.status{
+    padding:5px 10px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.status-belum{
+    background:#fee2e2;
+    color:#dc2626;
+}
+
+.status-proses{
+    background:#fef3c7;
+    color:#d97706;
+}
+
+.status-selesai{
+    background:#dcfce7;
+    color:#16a34a;
+}
+
+/* ================= SISWA ================= */
+
+.student-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.student-card{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,.06);
+}
+
+.student-card h3{
+    margin-bottom:7px;
+    color:#4f46e5;
+}
+
+.student-card p{
+    color:#666;
+    margin:6px 0;
+}
+
+/* ================= RANKING ================= */
+
+.rank-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px;
+    background:white;
+    border-radius:12px;
+    margin-bottom:12px;
+    box-shadow:0 4px 15px rgba(0,0,0,.05);
+}
+
+.rank-left{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.rank-number{
+    width:40px;
+    height:40px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#4f46e5;
+    color:white;
+    border-radius:50%;
+    font-weight:bold;
+}
+
+.rank-poin{
+    font-size:18px;
+    font-weight:bold;
+    color:#4f46e5;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:900px){
+
+    .sidebar{
+        position:relative;
+        width:100%;
+        height:auto;
+    }
+
+    .main{
+        margin-left:0;
+        padding:20px;
+    }
+
+    .cards{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .student-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:600px){
+
+    .cards{
+        grid-template-columns:1fr;
+    }
+
+    .student-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .search-filter{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= LOGIN ================= -->
+
+<div id="loginPage">
+
+    <div class="login-box">
+
+        <h1 id="loginTitle">🔐 LOGIN</h1>
+
+        <p id="loginDescription">
+            Masuk ke Database Manajemen Tugas
+        </p>
+
+        <!-- LOGIN -->
+
+        <div id="loginForm">
+
+            <div class="login-group">
+
+                <label>Username</label>
+
+                <input
+                    type="text"
+                    id="loginUsername"
+                    placeholder="Masukkan username"
+                >
+
+            </div>
+
+            <div class="login-group">
+
+                <label>Password</label>
+
+                <input
+                    type="password"
+                    id="loginPassword"
+                    placeholder="Masukkan password"
+                >
+
+            </div>
+
+            <div class="login-buttons">
+
+                <button
+                    class="btn-login"
+                    onclick="login()"
+                >
+                    YES
+                </button>
+
+                <button
+                    class="btn-cancel"
+                    onclick="batalLogin()"
+                >
+                    NO
+                </button>
+
+            </div>
+
+            <button
+                class="btn-daftar"
+                onclick="tampilkanDaftar()"
+            >
+                📝 Buat Akun Baru
+            </button>
+
+        </div>
+
+
+        <!-- DAFTAR -->
+
+        <div
+            id="registerForm"
+            style="display:none;"
+        >
+
+            <div class="login-group">
+
+                <label>
+                    Buat Username
+                </label>
+
+                <input
+                    type="text"
+                    id="registerUsername"
+                    placeholder="Buat username sendiri"
+                >
+
+            </div>
+
+
+            <div class="login-group">
+
+                <label>
+                    Buat Password
+                </label>
+
+                <input
+                    type="password"
+                    id="registerPassword"
+                    placeholder="Buat password sendiri"
+                >
+
+            </div>
+
+
+            <div class="login-group">
+
+                <label>
+                    Ulangi Password
+                </label>
+
+                <input
+                    type="password"
+                    id="registerPassword2"
+                    placeholder="Ulangi password"
+                >
+
+            </div>
+
+
+            <div class="login-buttons">
+
+                <button
+                    class="btn-login"
+                    onclick="buatAkun()"
+                >
+                    YES
+                </button>
+
+                <button
+                    class="btn-cancel"
+                    onclick="kembaliLogin()"
+                >
+                    NO
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="loginMessage"
+            class="login-error"
+        ></div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= SIDEBAR ================= -->
+
+<div class="sidebar">
+
+    <div class="logo">
+        📚 DATABASE SISWA
+    </div>
+
+    <div
+        class="menu active"
+        onclick="bukaHalaman('dashboard',this)"
+    >
+        🏠 Dashboard
+    </div>
+
+    <div
+        class="menu"
+        onclick="bukaHalaman('dataSiswaPage',this)"
+    >
+        👨‍🎓 Data Siswa
+    </div>
+
+    <div
+        class="menu"
+        onclick="bukaHalaman('dataTugasPage',this)"
+    >
+        📝 Data Tugas
+    </div>
+
+    <div
+        class="menu"
+        onclick="bukaHalaman('rankingPage',this)"
+    >
+        🏆 Ranking
+    </div>
+
+</div>
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="main">
+
+
+<!-- ================= DASHBOARD ================= -->
+
+<section
+    id="dashboard"
+    class="page active"
+>
+
+    <div class="page-title">
+        Dashboard
+    </div>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>Total Siswa</h3>
+            <p id="totalSiswa">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Total Tugas</h3>
+            <p id="totalTugas">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Tugas Selesai</h3>
+            <p id="totalSelesai">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Total Poin</h3>
+            <p id="totalPoin">0</p>
+        </div>
+
+    </div>
+
+    <div class="box">
+
+        <h2>
+            📊 Informasi Sistem
+        </h2>
+
+        <p>
+            Sistem ini digunakan untuk mengelola data siswa,
+            tugas, status tugas, serta poin siswa.
+        </p>
+
+        <br>
+
+        <p>
+            Data tersimpan otomatis pada browser menggunakan
+            LocalStorage.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- ================= DATA SISWA ================= -->
+
+<section
+    id="dataSiswaPage"
+    class="page"
+>
+
+    <div class="page-title">
+        Data Siswa
+    </div>
+
+    <div class="box">
+
+        <input
+            type="text"
+            id="cariSiswa"
+            placeholder="🔎 Cari nama siswa..."
+            onkeyup="renderSiswa()"
+            style="
+                width:100%;
+                padding:13px;
+                border:1px solid #ddd;
+                border-radius:8px;
+                margin-bottom:20px;
+            "
+        >
+
+        <div
+            id="studentGrid"
+            class="student-grid"
+        ></div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= DATA TUGAS ================= -->
+
+<section
+    id="dataTugasPage"
+    class="page"
+>
+
+    <div class="page-title">
+        Data Tugas
+    </div>
+
+
+    <!-- FORM -->
+
+    <div class="box">
+
+        <h2>
+            ➕ Tambah Data Tugas
+        </h2>
+
+        <form id="formTugas">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label>
+                        Nama Siswa
+                    </label>
+
+                    <input
+                        type="text"
+                        id="nama"
+                        placeholder="Masukkan nama siswa"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Jurusan / Kelas
+                    </label>
+
+                    <select
+                        id="kelas"
+                        required
+                    >
+
+                        <option value="">
+                            -- Pilih Jurusan / Kelas --
+                        </option>
+
+                        <optgroup label="PEKSOS">
+
+                            <option>PEKSOS X 1</option>
+                            <option>PEKSOS X 2</option>
+                            <option>PEKSOS X 3</option>
+                            <option>PEKSOS X 4</option>
+
+                            <option>PEKSOS XI 1</option>
+                            <option>PEKSOS XI 2</option>
+                            <option>PEKSOS XI 3</option>
+                            <option>PEKSOS XI 4</option>
+
+                            <option>PEKSOS XII 1</option>
+                            <option>PEKSOS XII 2</option>
+                            <option>PEKSOS XII 3</option>
+                            <option>PEKSOS XII 4</option>
+
+                            <option>PEKSOS XIII 1</option>
+                            <option>PEKSOS XIII 2</option>
+                            <option>PEKSOS XIII 3</option>
+                            <option>PEKSOS XIII 4</option>
+
+                        </optgroup>
+
+
+                        <optgroup label="DKV">
+
+                            <option>DKV X 1</option>
+                            <option>DKV X 2</option>
+                            <option>DKV X 3</option>
+                            <option>DKV X 4</option>
+
+                            <option>DKV XI 1</option>
+                            <option>DKV XI 2</option>
+                            <option>DKV XI 3</option>
+                            <option>DKV XI 4</option>
+
+                            <option>DKV XII 1</option>
+                            <option>DKV XII 2</option>
+                            <option>DKV XII 3</option>
+                            <option>DKV XII 4</option>
+
+                            <option>DKV XIII 1</option>
+                            <option>DKV XIII 2</option>
+                            <option>DKV XIII 3</option>
+                            <option>DKV XIII 4</option>
+
+                        </optgroup>
+
+
+                        <optgroup label="ANIMASI">
+
+                            <option>ANIMASI X 1</option>
+                            <option>ANIMASI X 2</option>
+                            <option>ANIMASI X 3</option>
+                            <option>ANIMASI X 4</option>
+
+                            <option>ANIMASI XI 1</option>
+                            <option>ANIMASI XI 2</option>
+                            <option>ANIMASI XI 3</option>
+                            <option>ANIMASI XI 4</option>
+
+                            <option>ANIMASI XII 1</option>
+                            <option>ANIMASI XII 2</option>
+                            <option>ANIMASI XII 3</option>
+                            <option>ANIMASI XII 4</option>
+
+                            <option>ANIMASI XIII 1</option>
+                            <option>ANIMASI XIII 2</option>
+                            <option>ANIMASI XIII 3</option>
+                            <option>ANIMASI XIII 4</option>
+
+                        </optgroup>
+
+
+                        <optgroup label="RPL">
+
+                            <option>RPL X 1</option>
+                            <option>RPL X 2</option>
+                            <option>RPL X 3</option>
+                            <option>RPL X 4</option>
+
+                            <option>RPL XI 1</option>
+                            <option>RPL XI 2</option>
+                            <option>RPL XI 3</option>
+                            <option>RPL XI 4</option>
+
+                            <option>RPL XII 1</option>
+                            <option>RPL XII 2</option>
+                            <option>RPL XII 3</option>
+                            <option>RPL XII 4</option>
+
+                            <option>RPL XIII 1</option>
+                            <option>RPL XIII 2</option>
+                            <option>RPL XIII 3</option>
+                            <option>RPL XIII 4</option>
+
+                        </optgroup>
+
+
+                        <optgroup label="TKJ">
+
+                            <option>TKJ X 1</option>
+                            <option>TKJ X 2</option>
+                            <option>TKJ X 3</option>
+                            <option>TKJ X 4</option>
+
+                            <option>TKJ XI 1</option>
+                            <option>TKJ XI 2</option>
+                            <option>TKJ XI 3</option>
+                            <option>TKJ XI 4</option>
+
+                            <option>TKJ XII 1</option>
+                            <option>TKJ XII 2</option>
+                            <option>TKJ XII 3</option>
+                            <option>TKJ XII 4</option>
+
+                            <option>TKJ XIII 1</option>
+                            <option>TKJ XIII 2</option>
+                            <option>TKJ XIII 3</option>
+                            <option>TKJ XIII 4</option>
+
+                        </optgroup>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Nama Tugas
+                    </label>
+
+                    <input
+                        type="text"
+                        id="tugasInput"
+                        placeholder="Contoh: Membuat Website"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Mata Pelajaran
+                    </label>
+
+                    <input
+                        type="text"
+                        id="mapel"
+                        placeholder="Contoh: Pemrograman Web"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Tanggal
+                    </label>
+
+                    <input
+                        type="date"
+                        id="tanggal"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Status
+                    </label>
+
+                    <select id="status">
+
+                        <option value="Belum">
+                            Belum
+                        </option>
+
+                        <option value="Proses">
+                            Proses
+                        </option>
+
+                        <option value="Selesai">
+                            Selesai
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Poin
+                    </label>
+
+                    <input
+                        type="number"
+                        id="poin"
+                        value="0"
+                        min="0"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <label>
+                        Keterangan
+                    </label>
+
+                    <textarea
+                        id="keterangan"
+                        placeholder="Tambahkan keterangan..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="full">
+
+                    <button
+                        type="submit"
+                        class="btn-primary"
+                        id="btnSubmit"
+                    >
+                        ➕ Tambah Data
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn-secondary"
+                        onclick="resetForm()"
+                    >
+                        🔄 Reset
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- TABEL -->
+
+    <div class="box">
+
+        <h2>
+            📋 Daftar Tugas
+        </h2>
+
+        <button
+            class="btn-export"
+            onclick="exportExcel()"
+        >
+            📊 Export ke Excel
+        </button>
+
+
+        <div class="search-filter">
+
+            <input
+                type="text"
+                id="cariTugas"
+                placeholder="🔎 Cari tugas..."
+                onkeyup="renderTable()"
+            >
+
+            <select
+                id="filterKelas"
+                onchange="renderTable()"
+            >
+
+                <option value="">
+                    Semua Kelas
+                </option>
+
+            </select>
+
+            <select
+                id="filterStatus"
+                onchange="renderTable()"
+            >
+
+                <option value="">
+                    Semua Status
+                </option>
+
+                <option value="Belum">
+                    Belum
+                </option>
+
+                <option value="Proses">
+                    Proses
+                </option>
+
+                <option value="Selesai">
+                    Selesai
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>No</th>
+                        <th>Nama Siswa</th>
+                        <th>Kelas</th>
+                        <th>Tugas</th>
+                        <th>Mapel</th>
+                        <th>Tanggal</th>
+                        <th>Status</th>
+                        <th>Poin</th>
+                        <th>Keterangan</th>
+                        <th>Aksi</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="tableBody"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= RANKING ================= -->
+
+<section
+    id="rankingPage"
+    class="page"
+>
+
+    <div class="page-title">
+        🏆 Ranking Siswa
+    </div>
+
+    <div id="rankList"></div>
+
+</section>
+
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   SISTEM AKUN
+===================================================== */
+
+let akun =
+    JSON.parse(
+        localStorage.getItem("akunPengguna")
+    ) || null;
+
+
+/* ================= TAMPILKAN DAFTAR ================= */
+
+function tampilkanDaftar(){
+
+    document
+    .getElementById("loginForm")
+    .style.display = "none";
+
+    document
+    .getElementById("registerForm")
+    .style.display = "block";
+
+    document
+    .getElementById("loginTitle")
+    .innerText = "📝 BUAT AKUN";
+
+    document
+    .getElementById("loginDescription")
+    .innerText =
+    "Buat username dan password sendiri";
+
+    document
+    .getElementById("loginMessage")
+    .innerText = "";
+
+}
+
+
+/* ================= KEMBALI LOGIN ================= */
+
+function kembaliLogin(){
+
+    document
+    .getElementById("loginForm")
+    .style.display = "block";
+
+    document
+    .getElementById("registerForm")
+    .style.display = "none";
+
+    document
+    .getElementById("loginTitle")
+    .innerText = "🔐 LOGIN";
+
+    document
+    .getElementById("loginDescription")
+    .innerText =
+    "Masuk ke Database Manajemen Tugas";
+
+    document
+    .getElementById("loginMessage")
+    .innerText = "";
+
+}
+
+
+/* ================= BUAT AKUN ================= */
+
+function buatAkun(){
+
+    const username =
+        document
+        .getElementById("registerUsername")
+        .value
+        .trim();
+
+
+    const password =
+        document
+        .getElementById("registerPassword")
+        .value;
+
+
+    const password2 =
+        document
+        .getElementById("registerPassword2")
+        .value;
+
+
+    if(username === "" || password === ""){
+
+        tampilkanPesan(
+            "Username dan password wajib diisi!",
+            false
+        );
+
+        return;
+
+    }
+
+
+    if(username.length < 3){
+
+        tampilkanPesan(
+            "Username minimal 3 karakter!",
+            false
+        );
+
+        return;
+
+    }
+
+
+    if(password.length < 4){
+
+        tampilkanPesan(
+            "Password minimal 4 karakter!",
+            false
+        );
+
+        return;
+
+    }
+
+
+    if(password !== password2){
+
+        tampilkanPesan(
+            "Password tidak sama!",
+            false
+        );
+
+        return;
+
+    }
+
+
+    akun = {
+
+        username:username,
+
+        password:password
+
+    };
+
+
+    localStorage.setItem(
+        "akunPengguna",
+        JSON.stringify(akun)
+    );
+
+
+    tampilkanPesan(
+        "Akun berhasil dibuat!",
+        true
+    );
+
+
+    setTimeout(
+        function(){
+
+            kembaliLogin();
+
+            document
+            .getElementById("loginUsername")
+            .value =
+            username;
+
+            document
+            .getElementById("loginPassword")
+            .value = "";
+
+        },
+        1000
+    );
+
+}
+
+
+/* ================= PESAN ================= */
+
+function tampilkanPesan(
+    pesan,
+    berhasil
+){
+
+    const message =
+        document
+        .getElementById("loginMessage");
+
+
+    message.innerText = pesan;
+
+
+    if(berhasil){
+
+        message.className =
+        "login-success";
+
+    }
+
+    else{
+
+        message.className =
+        "login-error";
+
+    }
+
+}
+
+
+/* ================= LOGIN ================= */
+
+function login(){
+
+    const username =
+        document
+        .getElementById("loginUsername")
+        .value
+        .trim();
+
+
+    const password =
+        document
+        .getElementById("loginPassword")
+        .value;
+
+
+    if(!akun){
+
+        tampilkanPesan(
+            "Belum ada akun. Silakan buat akun terlebih dahulu.",
+            false
+        );
+
+        return;
+
+    }
+
+
+    if(
+        username === akun.username &&
+        password === akun.password
+    ){
+
+        document
+        .getElementById("loginPage")
+        .style.display = "none";
+
+        document
+        .getElementById("loginMessage")
+        .innerText = "";
+
+    }
+
+    else{
+
+        tampilkanPesan(
+            "Username atau password salah!",
+            false
+        );
+
+    }
+
+}
+
+
+/* ================= BATAL LOGIN ================= */
+
+function batalLogin(){
+
+    document
+    .getElementById("loginUsername")
+    .value = "";
+
+    document
+    .getElementById("loginPassword")
+    .value = "";
+
+    document
+    .getElementById("loginMessage")
+    .innerText = "";
+
+}
+
+
+/* ================= ENTER LOGIN ================= */
+
+document.addEventListener(
+    "keydown",
+    function(e){
+
+        if(
+            e.key === "Enter" &&
+            document
+            .getElementById("loginPage")
+            .style.display !== "none"
+        ){
+
+            if(
+                document
+                .getElementById("loginForm")
+                .style.display !== "none"
+            ){
+
+                login();
+
+            }
+
+            else{
+
+                buatAkun();
+
+            }
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   DATA SISWA & TUGAS
+===================================================== */
+
+let dataSiswa =
+    JSON.parse(
+        localStorage.getItem("dataSiswa")
+    ) || [];
+
+
+let dataTugas =
+    JSON.parse(
+        localStorage.getItem("dataTugas")
+    ) || [];
+
+
+let editId = null;
+
+
+/* ================= NAVIGASI ================= */
+
+function bukaHalaman(
+    id,
+    element
+){
+
+    document
+    .querySelectorAll(".page")
+    .forEach(
+        page =>
+        page.classList.remove("active")
+    );
+
+
+    const halaman =
+        document.getElementById(id);
+
+
+    if(halaman){
+
+        halaman.classList.add("active");
+
+    }
+
+
+    document
+    .querySelectorAll(".menu")
+    .forEach(
+        menu =>
+        menu.classList.remove("active")
+    );
+
+
+    if(element){
+
+        element.classList.add("active");
+
+    }
+
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+/* ================= SIMPAN ================= */
+
+function simpanData(){
+
+    localStorage.setItem(
+        "dataSiswa",
+        JSON.stringify(dataSiswa)
+    );
+
+    localStorage.setItem(
+        "dataTugas",
+        JSON.stringify(dataTugas)
+    );
+
+}
+
+
+/* ================= CARI SISWA ================= */
+
+function cariSiswa(nama){
+
+    return dataSiswa.find(
+        siswa =>
+        siswa.nama.toLowerCase() ===
+        nama.toLowerCase()
+    );
+
+}
+
+
+/* ================= FORM TUGAS ================= */
+
+document
+.getElementById("formTugas")
+.addEventListener(
+    "submit",
+    function(e){
+
+        e.preventDefault();
+
+
+        const nama =
+            document
+            .getElementById("nama")
+            .value
+            .trim();
+
+
+        const kelas =
+            document
+            .getElementById("kelas")
+            .value;
+
+
+        const tugas =
+            document
+            .getElementById("tugasInput")
+            .value
+            .trim();
+
+
+        const mapel =
+            document
+            .getElementById("mapel")
+            .value
+            .trim();
+
+
+        const tanggal =
+            document
+            .getElementById("tanggal")
+            .value;
+
+
+        const status =
+            document
+            .getElementById("status")
+            .value;
+
+
+        const poin =
+            Number(
+                document
+                .getElementById("poin")
+                .value
+            ) || 0;
+
+
+        const keterangan =
+            document
+            .getElementById("keterangan")
+            .value
+            .trim();
+
+
+        if(editId !== null){
+
+            const index =
+                dataTugas.findIndex(
+                    item =>
+                    item.id === editId
+                );
+
+
+            if(index !== -1){
+
+                dataTugas[index] = {
+
+                    id:editId,
+                    nama:nama,
+                    kelas:kelas,
+                    tugas:tugas,
+                    mapel:mapel,
+                    tanggal:tanggal,
+                    status:status,
+                    poin:poin,
+                    keterangan:keterangan
+
+                };
+
+            }
+
+
+            editId = null;
+
+
+            document
+            .getElementById("btnSubmit")
+            .innerText =
+            "➕ Tambah Data";
+
+        }
+
+        else{
+
+            dataTugas.push({
+
+                id:Date.now(),
+
+                nama:nama,
+
+                kelas:kelas,
+
+                tugas:tugas,
+
+                mapel:mapel,
+
+                tanggal:tanggal,
+
+                status:status,
+
+                poin:poin,
+
+                keterangan:keterangan
+
+            });
+
+        }
+
+
+        let siswa =
+            cariSiswa(nama);
+
+
+        if(!siswa){
+
+            dataSiswa.push({
+
+                id:Date.now(),
+
+                nama:nama,
+
+                kelas:kelas
+
+            });
+
+        }
+
+        else{
+
+            siswa.kelas = kelas;
+
+        }
+
+
+        simpanData();
+
+        resetForm();
+
+        renderAll();
+
+    }
+);
+
+
+/* ================= RESET ================= */
+
+function resetForm(){
+
+    document
+    .getElementById("formTugas")
+    .reset();
+
+    editId = null;
+
+    document
+    .getElementById("btnSubmit")
+    .innerText =
+    "➕ Tambah Data";
+
+}
+
+
+/* ================= DASHBOARD ================= */
+
+function renderDashboard(){
+
+    document
+    .getElementById("totalSiswa")
+    .innerText =
+    dataSiswa.length;
+
+
+    document
+    .getElementById("totalTugas")
+    .innerText =
+    dataTugas.length;
+
+
+    const selesai =
+        dataTugas.filter(
+            tugas =>
+            tugas.status === "Selesai"
+        ).length;
+
+
+    document
+    .getElementById("totalSelesai")
+    .innerText =
+    selesai;
+
+
+    const totalPoin =
+        dataTugas.reduce(
+            (total,tugas) =>
+            total + Number(tugas.poin || 0),
+            0
+        );
+
+
+    document
+    .getElementById("totalPoin")
+    .innerText =
+    totalPoin;
+
+}
+
+
+/* ================= DATA SISWA ================= */
+
+function renderSiswa(){
+
+    const grid =
+        document
+        .getElementById("studentGrid");
+
+
+    const keyword =
+        document
+        .getElementById("cariSiswa")
+        .value
+        .toLowerCase();
+
+
+    const hasil =
+        dataSiswa.filter(
+            siswa =>
+            siswa.nama
+            .toLowerCase()
+            .includes(keyword)
+        );
+
+
+    grid.innerHTML = "";
+
+
+    if(hasil.length === 0){
+
+        grid.innerHTML =
+        "<p>Belum ada data siswa.</p>";
+
+        return;
+
+    }
+
+
+    hasil.forEach(
+        siswa => {
+
+            const tugasSiswa =
+                dataTugas.filter(
+                    tugas =>
+                    tugas.nama.toLowerCase() ===
+                    siswa.nama.toLowerCase()
+                );
+
+
+            const selesai =
+                tugasSiswa.filter(
+                    tugas =>
+                    tugas.status === "Selesai"
+                ).length;
+
+
+            const totalPoin =
+                tugasSiswa.reduce(
+                    (total,tugas) =>
+                    total +
+                    Number(tugas.poin || 0),
+                    0
+                );
+
+
+            grid.innerHTML +=
+            `
+            <div class="student-card">
+
+                <h3>
+                    👨‍🎓 ${siswa.nama}
+                </h3>
+
+                <p>
+                    🏫 ${siswa.kelas}
+                </p>
+
+                <p>
+                    📝 Jumlah Tugas:
+                    <b>${tugasSiswa.length}</b>
+                </p>
+
+                <p>
+                    ✅ Tugas Selesai:
+                    <b>${selesai}</b>
+                </p>
+
+                <p>
+                    ⭐ Total Poin:
+                    <b>${totalPoin}</b>
+                </p>
+
+                <br>
+
+                <button
+                    class="btn-danger"
+                    onclick="hapusSiswa(${siswa.id})"
+                >
+                    🗑 Hapus Siswa
+                </button>
+
+            </div>
+            `;
+
+        }
+    );
+
+}
+
+
+/* ================= HAPUS SISWA ================= */
+
+function hapusSiswa(id){
+
+    const siswa =
+        dataSiswa.find(
+            item =>
+            item.id === id
+        );
+
+
+    if(!siswa) return;
+
+
+    const yakin =
+        confirm(
+            "Hapus siswa " +
+            siswa.nama +
+            " beserta semua tugasnya?"
+        );
+
+
+    if(!yakin) return;
+
+
+    dataSiswa =
+        dataSiswa.filter(
+            item =>
+            item.id !== id
+        );
+
+
+    dataTugas =
+        dataTugas.filter(
+            tugas =>
+            tugas.nama.toLowerCase() !==
+            siswa.nama.toLowerCase()
+        );
+
+
+    simpanData();
+
+    renderAll();
+
+}
+
+
+/* ================= FILTER KELAS ================= */
+
+function isiFilterKelas(){
+
+    const filter =
+        document
+        .getElementById("filterKelas");
+
+
+    const kelasSet =
+        new Set(
+            dataSiswa.map(
+                siswa =>
+                siswa.kelas
+            )
+        );
+
+
+    dataTugas.forEach(
+        tugas =>
+        kelasSet.add(
+            tugas.kelas
+        )
+    );
+
+
+    filter.innerHTML =
+    `
+    <option value="">
+        Semua Kelas
+    </option>
+    `;
+
+
+    [...kelasSet]
+    .sort()
+    .forEach(
+        kelas => {
+
+            filter.innerHTML +=
+            `
+            <option value="${kelas}">
+                ${kelas}
+            </option>
+            `;
+
+        }
+    );
+
+}
+
+
+/* ================= TABLE ================= */
+
+function renderTable(){
+
+    const tbody =
+        document
+        .getElementById("tableBody");
+
+
+    const keyword =
+        document
+        .getElementById("cariTugas")
+        .value
+        .toLowerCase();
+
+
+    const filterKelas =
+        document
+        .getElementById("filterKelas")
+        .value;
+
+
+    const filterStatus =
+        document
+        .getElementById("filterStatus")
+        .value;
+
+
+    const hasil =
+        dataTugas.filter(
+            tugas => {
+
+                const cocokKeyword =
+
+                    tugas.nama
+                    .toLowerCase()
+                    .includes(keyword)
+
+                    ||
+
+                    tugas.kelas
+                    .toLowerCase()
+                    .includes(keyword)
+
+                    ||
+
+                    tugas.tugas
+                    .toLowerCase()
+                    .includes(keyword)
+
+                    ||
+
+                    tugas.mapel
+                    .toLowerCase()
+                    .includes(keyword)
+
+                    ||
+
+                    tugas.keterangan
+                    .toLowerCase()
+                    .includes(keyword);
+
+
+                return (
+
+                    cocokKeyword &&
+
+                    (
+                        !filterKelas ||
+                        tugas.kelas === filterKelas
+                    ) &&
+
+                    (
+                        !filterStatus ||
+                        tugas.status === filterStatus
+                    )
+
+                );
+
+            }
+        );
+
+
+    tbody.innerHTML = "";
+
+
+    if(hasil.length === 0){
+
+        tbody.innerHTML =
+        `
+        <tr>
+
+            <td
+                colspan="10"
+                style="text-align:center"
+            >
+                Belum ada data tugas.
+            </td>
+
+        </tr>
+        `;
+
+        return;
+
+    }
+
+
+    hasil.forEach(
+        (tugas,index) => {
+
+            let statusClass =
+                "status-belum";
+
+
+            if(tugas.status === "Proses"){
+
+                statusClass =
+                "status-proses";
+
+            }
+
+
+            if(tugas.status === "Selesai"){
+
+                statusClass =
+                "status-selesai";
+
+            }
+
+
+            tbody.innerHTML +=
+            `
+            <tr>
+
+                <td>${index + 1}</td>
+
+                <td>${tugas.nama}</td>
+
+                <td>${tugas.kelas}</td>
+
+                <td>${tugas.tugas}</td>
+
+                <td>${tugas.mapel}</td>
+
+                <td>${tugas.tanggal}</td>
+
+                <td>
+
+                    <span
+                        class="status ${statusClass}"
+                    >
+                        ${tugas.status}
+                    </span>
+
+                </td>
+
+                <td>${tugas.poin}</td>
+
+                <td>
+                    ${tugas.keterangan || "-"}
+                </td>
+
+                <td>
+
+                    <button
+                        class="btn-warning"
+                        onclick="editTugas(${tugas.id})"
+                    >
+                        ✏️
+                    </button>
+
+                    <button
+                        class="btn-danger"
+                        onclick="hapusTugas(${tugas.id})"
+                    >
+                        🗑
+                    </button>
+
+                </td>
+
+            </tr>
+            `;
+
+        }
+    );
+
+}
+
+
+/* ================= EDIT ================= */
+
+function editTugas(id){
+
+    const tugas =
+        dataTugas.find(
+            item =>
+            item.id === id
+        );
+
+
+    if(!tugas) return;
+
+
+    editId = id;
+
+
+    document
+    .getElementById("nama")
+    .value =
+    tugas.nama;
+
+
+    document
+    .getElementById("kelas")
+    .value =
+    tugas.kelas;
+
+
+    document
+    .getElementById("tugasInput")
+    .value =
+    tugas.tugas;
+
+
+    document
+    .getElementById("mapel")
+    .value =
+    tugas.mapel;
+
+
+    document
+    .getElementById("tanggal")
+    .value =
+    tugas.tanggal;
+
+
+    document
+    .getElementById("status")
+    .value =
+    tugas.status;
+
+
+    document
+    .getElementById("poin")
+    .value =
+    tugas.poin;
+
+
+    document
+    .getElementById("keterangan")
+    .value =
+    tugas.keterangan;
+
+
+    document
+    .getElementById("btnSubmit")
+    .innerText =
+    "💾 Simpan Perubahan";
+
+
+    bukaHalaman(
+        "dataTugasPage",
+        document.querySelectorAll(".menu")[2]
+    );
+
+}
+
+
+/* ================= HAPUS TUGAS ================= */
+
+function hapusTugas(id){
+
+    const yakin =
+        confirm(
+            "Yakin ingin menghapus tugas ini?"
+        );
+
+
+    if(!yakin) return;
+
+
+    dataTugas =
+        dataTugas.filter(
+            tugas =>
+            tugas.id !== id
+        );
+
+
+    simpanData();
+
+    renderAll();
+
+}
+
+
+/* ================= RANKING ================= */
+
+function renderRanking(){
+
+    const rankList =
+        document
+        .getElementById("rankList");
+
+
+    const ranking =
+        dataSiswa.map(
+            siswa => {
+
+                const tugas =
+                    dataTugas.filter(
+                        item =>
+                        item.nama.toLowerCase() ===
+                        siswa.nama.toLowerCase()
+                    );
+
+
+                const poin =
+                    tugas.reduce(
+                        (total,item) =>
+                        total +
+                        Number(item.poin || 0),
+                        0
+                    );
+
+
+                const selesai =
+                    tugas.filter(
+                        item =>
+                        item.status === "Selesai"
+                    ).length;
+
+
+                return {
+
+                    nama:siswa.nama,
+
+                    kelas:siswa.kelas,
+
+                    poin:poin,
+
+                    selesai:selesai,
+
+                    tugas:tugas.length
+
+                };
+
+            }
+        );
+
+
+    ranking.sort(
+        (a,b) =>
+        b.poin - a.poin
+    );
+
+
+    rankList.innerHTML = "";
+
+
+    if(ranking.length === 0){
+
+        rankList.innerHTML =
+        `
+        <div class="box">
+            Belum ada data ranking.
+        </div>
+        `;
+
+        return;
+
+    }
+
+
+    ranking.forEach(
+        (siswa,index) => {
+
+            rankList.innerHTML +=
+            `
+            <div class="rank-item">
+
+                <div class="rank-left">
+
+                    <div class="rank-number">
+                        ${index + 1}
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            ${siswa.nama}
+                        </h3>
+
+                        <p>
+                            ${siswa.kelas}
+                        </p>
+
+                        <small>
+                            ${siswa.selesai}
+                            tugas selesai dari
+                            ${siswa.tugas}
+                            tugas
+                        </small>
+
+                    </div>
+
+                </div>
+
+                <div class="rank-poin">
+                    ⭐ ${siswa.poin}
+                </div>
+
+            </div>
+            `;
+
+        }
+    );
+
+}
+
+
+/* ================= EXPORT EXCEL ================= */
+
+function exportExcel(){
+
+    if(
+        dataSiswa.length === 0 &&
+        dataTugas.length === 0
+    ){
+
+        alert(
+            "Belum ada data yang bisa diexport."
+        );
+
+        return;
+
+    }
+
+
+    const siswaExcel =
+        dataSiswa.map(
+            (siswa,index) => {
+
+                const tugasSiswa =
+                    dataTugas.filter(
+                        tugas =>
+                        tugas.nama.toLowerCase() ===
+                        siswa.nama.toLowerCase()
+                    );
+
+
+                const selesai =
+                    tugasSiswa.filter(
+                        tugas =>
+                        tugas.status === "Selesai"
+                    ).length;
+
+
+                const totalPoin =
+                    tugasSiswa.reduce(
+                        (total,tugas) =>
+                        total +
+                        Number(tugas.poin || 0),
+                        0
+                    );
+
+
+                return {
+
+                    "No":
+                    index + 1,
+
+                    "Nama Siswa":
+                    siswa.nama,
+
+                    "Jurusan / Kelas":
+                    siswa.kelas,
+
+                    "Jumlah Tugas":
+                    tugasSiswa.length,
+
+                    "Tugas Selesai":
+                    selesai,
+
+                    "Total Poin":
+                    totalPoin
+
+                };
+
+            }
+        );
+
+
+    const tugasExcel =
+        dataTugas.map(
+            (tugas,index) => {
+
+                return {
+
+                    "No":
+                    index + 1,
+
+                    "Nama Siswa":
+                    tugas.nama,
+
+                    "Jurusan / Kelas":
+                    tugas.kelas,
+
+                    "Nama Tugas":
+                    tugas.tugas,
+
+                    "Mata Pelajaran":
+                    tugas.mapel,
+
+                    "Tanggal":
+                    tugas.tanggal,
+
+                    "Status":
+                    tugas.status,
+
+                    "Poin":
+                    tugas.poin,
+
+                    "Keterangan":
+                    tugas.keterangan
+
+                };
+
+            }
+        );
+
+
+    const workbook =
+        XLSX.utils.book_new();
+
+
+    const sheetSiswa =
+        XLSX.utils.json_to_sheet(
+            siswaExcel
+        );
+
+
+    const sheetTugas =
+        XLSX.utils.json_to_sheet(
+            tugasExcel
+        );
+
+
+    XLSX.utils.book_append_sheet(
+        workbook,
+        sheetSiswa,
+        "Data Siswa"
+    );
+
+
+    XLSX.utils.book_append_sheet(
+        workbook,
+        sheetTugas,
+        "Data Tugas"
+    );
+
+
+    sheetSiswa["!cols"] = [
+
+        {wch:5},
+        {wch:25},
+        {wch:22},
+        {wch:15},
+        {wch:15},
+        {wch:15}
+
+    ];
+
+
+    sheetTugas["!cols"] = [
+
+        {wch:5},
+        {wch:25},
+        {wch:22},
+        {wch:30},
+        {wch:25},
+        {wch:15},
+        {wch:15},
+        {wch:10},
+        {wch:35}
+
+    ];
+
+
+    XLSX.writeFile(
+        workbook,
+        "Database_Tugas_Siswa.xlsx"
+    );
+
+
+    alert(
+        "Data berhasil diexport ke Excel!"
+    );
+
+}
+
+
+/* ================= RENDER SEMUA ================= */
+
+function renderAll(){
+
+    renderDashboard();
+
+    renderSiswa();
+
+    isiFilterKelas();
+
+    renderTable();
+
+    renderRanking();
+
+}
+
+
+/* ================= START ================= */
+
+renderAll();
+
+
+/*
+   Kalau belum pernah membuat akun,
+   otomatis arahkan ke halaman daftar.
+*/
+
+if(!akun){
+
+    setTimeout(
+        function(){
+
+            tampilkanDaftar();
+
+        },
+        300
+    );
+
+}
+
+</script>
+
+</body>
+</html>
